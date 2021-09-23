@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const AccessToken = require("../TokenManager/TokenManager");
 const User = require("../../DB/Schema/index").User;
 const saltRound = 10;
 const user = (req, res) => {
@@ -10,9 +11,23 @@ const user = (req, res) => {
             password: hash
         }, (err, result) => {
             if (!err) {
-                res.send().status(201);
+                const userData = {id: result[0]._id, firstname: req.body.firstname};
+                const accessToken = AccessToken(userData);
+                res
+                    .status(202)
+                    .cookie("token", accessToken, {
+                        sameSite: "none",
+                        secure: true,
+                        path: "/",
+                        expires: new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000),
+                        httpOnly: true
+                    })
+                    .json({
+                        isLogin: true,
+                        userData
+                    });
             } else {
-                res.send().status(400);
+                res.status(400).send();
             }
         })
     });
