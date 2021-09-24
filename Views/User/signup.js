@@ -26,10 +26,12 @@ const user = (req, res) => {
                         isLogin: true,
                         userData
                     });
-            } else {
+            }
+            else {
                 console.log(err)
                 res.status(400).send();
             }
+
         })
     });
 }

@@ -6,7 +6,8 @@ import Search from "./Components/Search";
 import {useEffect} from "react";
 import axios from "axios";
 import {useDispatch} from "react-redux";
-import {isLoginTrue, isLoginFalse} from "./Action";
+import {isLoginTrue, isLoginFalse, userData} from "./Action";
+import Amine from "./Components/Amine";
 
 function App() {
     const dispatch = useDispatch();
@@ -18,13 +19,12 @@ function App() {
             withCredentials: true,
             url: process.env.REACT_APP_PROXY + "/verifyuser"
         }).then((res) => {
+            dispatch(userData(res.data.user.id))
             dispatch(isLoginTrue())
         }).catch((err) => {
             dispatch(isLoginFalse())
         })
     }, [])
-
-
     return (
         <>
             <Navbar/>
@@ -34,6 +34,8 @@ function App() {
                         <Route exact path={"/"} component={Search}/>
                         <Route path={"/login"} component={Login}/>
                         <Route path={"/signup"} component={Signup}/>
+                        <Route path={"/amine/:id"} component={Amine}/>
+
                     </Switch>
                 </BrowserRouter>
             </main>

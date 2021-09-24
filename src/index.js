@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'mdbootstrap/css/bootstrap.min.css';
-import 'mdbootstrap/css/mdb.min.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 import './index.css';
 import store from "./store";
 import {Provider} from "react-redux";

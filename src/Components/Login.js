@@ -43,7 +43,7 @@ function Login() {
                 })
                 .catch((err) => {
                     if (err.response.status === 401) {
-                        setError(err.response.data.error);
+                        setError(err);
                     }
                 })
 

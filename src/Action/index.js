@@ -8,3 +8,10 @@ export const isLoginFalse = () => {
         type: "LOGINFALSE"
     }
 }
+
+export const userData = (val) => {
+    return {
+        type: "USERDATA",
+        payload: val
+    }
+}
