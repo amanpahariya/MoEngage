@@ -1,14 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {isLoginTrue} from "../Action";
 
 function Login() {
+    const dispatch = useDispatch();
+    const isLogin = useSelector((state) => state.changeLogin)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [typePassword, setTypePassword] = useState(true);
     const [error, setError] = useState();
+    const history = useHistory();
+
+    useEffect(() => {
+        if (isLogin) {
+            history.push("/");
+        }
+
+    }, [isLogin])
+
 
     const onsubmitForm = async (e) => {
         e.preventDefault();
@@ -25,7 +38,7 @@ function Login() {
                 }
             })
                 .then((res) => {
-                    console.log(res)
+                    dispatch(isLoginTrue())
                     setError("");
                 })
                 .catch((err) => {

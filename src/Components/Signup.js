@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {isLoginTrue} from "../Action";
 
-function Signup(props) {
+function Signup() {
+    const dispatch = useDispatch();
+    const isLogin = useSelector((state) => state.changeLogin)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [cnfPassword, setCnfPassword] = useState("");
@@ -12,6 +16,12 @@ function Signup(props) {
     const [cnfPasswordError, setCnfPasswordError] = useState(null);
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
+    const history = useHistory();
+    useEffect(() => {
+        if (isLogin) {
+            history.push("/");
+        }
+    }, [isLogin])
 
     const PasswordLength = (val) => {
         setPassword(val);
@@ -31,7 +41,6 @@ function Signup(props) {
         }
     }
 
-
     const onsubmitForm = async (e) => {
         e.preventDefault();
         if (password.length >= 8) {
@@ -49,7 +58,7 @@ function Signup(props) {
                 }
             })
                 .then((res) => {
-                    console.log(res)
+                    dispatch(isLoginTrue());
                 })
                 .catch((err) => {
                     if (err.response.status === 406) {

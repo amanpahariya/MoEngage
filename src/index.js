@@ -5,10 +5,16 @@ import reportWebVitals from './reportWebVitals';
 import 'mdbootstrap/css/bootstrap.min.css';
 import 'mdbootstrap/css/mdb.min.css';
 import './index.css';
+import store from "./store";
+import {Provider} from "react-redux";
+
+store.subscribe(() => console.log(store.getState()))
 
 ReactDOM.render(
     <React.StrictMode>
-        <App/>
+        <Provider store={store}>
+            <App/>
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );
