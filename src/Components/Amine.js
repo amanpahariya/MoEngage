@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
 import {useSelector} from "react-redux";
 
 
@@ -24,7 +23,6 @@ function Amine() {
         setData(temp.data.documents[0]);
     }, [])
     const saveRating = async (rating) => {
-        setRating(rating);
         for (let i = 0; i < 4; i++) {
             document.getElementById(`faStar${i + 1}`).style.color = "gray"
         }

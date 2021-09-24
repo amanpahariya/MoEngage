@@ -45,7 +45,9 @@ function Search(props) {
                             <div className={"bg-white d-flex search-input px-3"}>
                                 <input type={"text"} value={search}
                                        onChange={(e) => setSearch(e.target.value)}
-                                       className={"h-100 border-0 bg-transparent outline-none w-100"}/>
+                                       className={"h-100 border-0 bg-transparent outline-none w-100"}
+                                       placeholder={"search"}
+                                />
                                 <button type={"submit"} className={"border-0 bg-transparent"}>
                                     <FontAwesomeIcon icon={faSearch}/>
                                 </button>
