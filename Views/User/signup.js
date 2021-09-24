@@ -27,6 +27,7 @@ const user = (req, res) => {
                         userData
                     });
             } else {
+                console.log(err)
                 res.status(400).send();
             }
         })
