@@ -1,9 +1,12 @@
+// jshint esversion: 8
 const mongoose = require("mongoose");
 
-db().then(() => {
-    console.log("DBConnected")
-}).catch(err => console.log(err))
+const connection = mongoose.connect(process.env.MONGO_URI,
+    {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify: true},
+    (err) => {
+        if (!err) console.log("DBconnected");
+        else console.log(err);
+    }
+);
 
-async function db() {
-    await mongoose.connect(process.env.MONGO_URI);
-}
+module.exports = connection;
