@@ -17,7 +17,6 @@ app.use([
     }),
     route.use("/api", require("./Router/router"))
 ])
-console.log(process.env.MONGO_URI)
 app.use(favicon(__dirname + "/build/favicon.ico"));
 app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, "build")));
