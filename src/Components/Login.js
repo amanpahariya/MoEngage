@@ -37,7 +37,7 @@ function Login() {
                     password
                 }
             })
-                .then((res) => {
+                .then(() => {
                     dispatch(isLoginTrue())
                     setError("");
                 })
@@ -77,7 +77,7 @@ function Login() {
                                 <div className={"my-2"}>
                                     <label className={"form-label"} htmlFor="password">Password <span
                                         className={"text-danger"}> *</span> </label>
-                                    <div className={"form-control d-flex align-items-center"}>
+                                    <div className={"form-control d-flex align-items-center bg-white"}>
                                         <input type={!typePassword ? "text" : "password"}
                                                className={"w-100 border-0 outline-none"}
                                                name={"password"}
@@ -85,7 +85,7 @@ function Login() {
                                                onChange={(e) => setPassword(e.target.value)}
                                                required={true}/>
 
-                                        <span>{!typePassword ?
+                                        <span>{typePassword ?
                                             <FontAwesomeIcon icon={faEye} size={18}
                                                              onClick={() => setTypePassword(!typePassword)}/>
                                             : <FontAwesomeIcon icon={faEyeSlash} size={18}

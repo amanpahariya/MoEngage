@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 const ReviewSchema = new mongoose.Schema({
-    "amine_id": {type: Number, required: true, unique: true},
+    "anime_id": {type: Number, required: true, unique: true},
     ratings: [{
         "user_id": {type: String, required: true},
         "rating": {type: Number, required: true}

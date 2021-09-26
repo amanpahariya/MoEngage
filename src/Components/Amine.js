@@ -3,12 +3,17 @@ import {useParams} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import {useSelector} from "react-redux";
+import axios from "axios";
 
 
 function Amine() {
     const {id} = useParams();
     const [data, setData] = useState();
     const user = useSelector((state) => state.userDataReduce);
+    const [rating, setRating] = useState(0);
+    const [totalRating, setTotalRating] = useState(0);
+    const [userRating, setUserRating] = useState(0);
+
 
     useEffect(async () => {
         const temp = await fetch(`https://api.aniapi.com/v1/anime?anilist_id=${id}`, {
@@ -19,10 +24,17 @@ function Amine() {
                 'Accept': 'application/json',
             }
         }).then((res) => res.json())
-
         setData(temp.data.documents[0]);
     }, [])
-    const saveRating = async (rating) => {
+
+    useEffect(() => {
+        if (user !== 0) {
+            getRatings();
+        }
+    }, [user, id])
+
+
+    const myRating = (rating) => {
         for (let i = 0; i < 4; i++) {
             document.getElementById(`faStar${i + 1}`).style.color = "gray"
         }
@@ -30,6 +42,43 @@ function Amine() {
             document.getElementById(`faStar${i + 1}`).style.color = "yellow"
         }
     }
+
+    const saveRating = async (rating) => {
+        myRating(rating);
+        await axios({
+            method: 'post',
+            url: `http://localhost:5000/api/add-ratings`,
+            credentials: 'include',
+            withCredentials: true,
+            data: {
+                "anime_id": id,
+                "user": user,
+                "rate": rating
+            }
+        });
+        await getRatings();
+    }
+
+    const getRatings = async () => {
+
+        await axios({
+            method: 'get',
+            url: `http://localhost:5000/api/get-ratings?anime_id=${id}&user_id=${user}`,
+            credentials: 'include',
+            withCredentials: true,
+        })
+            .then(async (res) => {
+                setTotalRating(res.data.total_user);
+                setRating(parseFloat(res.data.rating));
+                if (res.data.user_rate !== undefined) {
+                    setUserRating(res.data.user_rate)
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
     return (
         <section className={"amine-container"}>
             {
@@ -40,7 +89,9 @@ function Amine() {
                         <div style={{maxWidth: 800}}>
                             <div className={"card m-2 p-3"}>
                                 <h3 className={"h3"}>{data.titles.en}</h3>
-                                <p className={"m-0"}>Ratings <span className={"text-success"}>4.5</span></p>
+                                <p className={"m-0"}>Ratings <span className={"text-success"}>{rating}</span>
+                                    <span className={"text-muted"}>({totalRating})</span></p>
+
                                 <div className={"ms-3"}>
                                     <FontAwesomeIcon className={"m-sm-1"} id={"faStar1"} icon={faStar}
                                                      onClick={() => saveRating(1)}

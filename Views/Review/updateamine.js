@@ -2,7 +2,7 @@ const Ratings = require("../../DB/Schema/index").Rating;
 
 const updateAmine = (req, res) => {
     Ratings.find({
-            amine_id: req.body.amine_id,
+            anime_id: req.body.anime_id,
             "ratings.user_id": req.body.user
         },
         {
@@ -26,7 +26,7 @@ const updateAmine = (req, res) => {
 }
 
 const addRating = (req, res) => {
-    Ratings.updateOne({amine_id: req.body.amine_id}, {
+    Ratings.updateOne({anime_id: req.body.anime_id}, {
         $push: {
             ratings: {
                 user_id: req.body.user,
@@ -46,7 +46,7 @@ const addRating = (req, res) => {
 const updateRating = (req, res) => {
     Ratings.updateOne(
         {
-            amine_id: req.body.amine_id,
+            anime_id: req.body.anime_id,
             "ratings.user_id": req.body.user
         }, {
             '$set': {

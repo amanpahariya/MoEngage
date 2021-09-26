@@ -2,7 +2,7 @@ const Ratings = require("../../DB/Schema/index").Rating;
 
 const addRating = (req, res) => {
     Ratings.insertMany({
-        amine_id: req.body.amine_id,
+        anime_id: req.body.anime_id,
         ratings: {
             user_id: req.body.user,
             rating: req.body.rate
@@ -11,7 +11,6 @@ const addRating = (req, res) => {
         if (!err) {
             res.status(201).send("added review");
         } else {
-            console.log(err)
             res.status(406).send(err);
         }
     })

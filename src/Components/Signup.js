@@ -113,7 +113,7 @@ function Signup() {
                                 <div className={"my-2"}>
                                     <label className={"form-label"} htmlFor="password">Password <span
                                         className={"text-danger"}> *</span> </label>
-                                    <div className={"form-control d-flex align-items-center"}>
+                                    <div className={"form-control d-flex align-items-center bg-white"}>
                                         <input type={"password"}
                                                className={"w-100 border-0 outline-none"}
                                                name={"password"}
@@ -128,9 +128,9 @@ function Signup() {
 
                                 </div>
                                 <div className={"my-2"}>
-                                    <label className={"form-label"} htmlFor="password">Password <span
+                                    <label className={"form-label"} htmlFor="password">Confirm Password <span
                                         className={"text-danger"}> *</span> </label>
-                                    <div className={"form-control d-flex align-items-center"}>
+                                    <div className={"form-control d-flex align-items-center bg-white"}>
                                         <input type={"password"}
                                                className={"w-100 border-0 outline-none"}
                                                name={"password"}
