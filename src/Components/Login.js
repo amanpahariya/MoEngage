@@ -17,10 +17,10 @@ function Login() {
 
     useEffect(() => {
         if (isLogin) {
-            history.push("/");
+            history.goBack();
         }
 
-    }, [isLogin])
+    }, [isLogin, history])
 
 
     const onsubmitForm = async (e) => {
@@ -86,9 +86,9 @@ function Login() {
                                                required={true}/>
 
                                         <span>{typePassword ?
-                                            <FontAwesomeIcon icon={faEye} size={18}
+                                            <FontAwesomeIcon icon={faEye}
                                                              onClick={() => setTypePassword(!typePassword)}/>
-                                            : <FontAwesomeIcon icon={faEyeSlash} size={18}
+                                            : <FontAwesomeIcon icon={faEyeSlash}
                                                                onClick={() => setTypePassword(!typePassword)}/>
                                         }
                         </span>

@@ -12,19 +12,22 @@ import Amine from "./Components/Amine";
 function App() {
     const dispatch = useDispatch();
 
-    useEffect(async () => {
-        await axios({
-            method: "GET",
-            credentials: true,
-            withCredentials: true,
-            url: process.env.REACT_APP_PROXY + "/verifyuser"
-        }).then((res) => {
-            dispatch(userData(res.data.user.id))
-            dispatch(isLoginTrue())
-        }).catch((err) => {
-            dispatch(isLoginFalse())
-        })
-    }, [])
+    useEffect(() => {
+        async function fetchData() {
+            await axios({
+                method: "GET",
+                credentials: true,
+                withCredentials: true,
+                url: process.env.REACT_APP_PROXY + "/verifyuser"
+            }).then((res) => {
+                dispatch(userData(res.data.user.id))
+                dispatch(isLoginTrue())
+            }).catch(() => {
+                dispatch(isLoginFalse())
+            })
+        }
+        fetchData();
+    })
     return (
         <>
             <Navbar/>
@@ -35,7 +38,6 @@ function App() {
                         <Route path={"/login"} component={Login}/>
                         <Route path={"/signup"} component={Signup}/>
                         <Route path={"/amine/:id"} component={Amine}/>
-
                     </Switch>
                 </BrowserRouter>
             </main>

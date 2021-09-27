@@ -1,6 +1,27 @@
 import React from 'react';
+import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {isLoginFalse, userData} from "../Action";
 
 function Navbar() {
+    const dispatch = useDispatch();
+    const isLogin = useSelector((state) => state.changeLogin)
+
+    const logout = () => {
+        axios({
+            method: 'get',
+            url: `${process.env.REACT_APP_PROXY}/logout`,
+            credentials: 'include',
+            withCredentials: true
+        })
+            .then(() => {
+                dispatch(isLoginFalse());
+                dispatch(userData(0));
+            })
+            .catch(() => {
+                // console.log(e);
+            })
+    }
     return (
         <nav className={"navbar navbar-expand-lg shadow-none border-bottom bg-white"}>
             <div className="container">
@@ -12,6 +33,7 @@ function Navbar() {
                     />
                     <span className={"h4 mx-2"}>Navbar</span>
                 </aside>
+                {isLogin ? <button className={"btn btn-warning"} onClick={() => logout()}>logout</button> : <></>}
             </div>
         </nav>
     );

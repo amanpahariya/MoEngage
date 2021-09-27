@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faStar} from "@fortawesome/free-regular-svg-icons";
 import {useSelector} from "react-redux";
@@ -7,6 +7,8 @@ import axios from "axios";
 
 
 function Amine() {
+    const isLogin = useSelector((state) => state.changeLogin)
+    const history = useHistory();
     const {id} = useParams();
     const [data, setData] = useState();
     const user = useSelector((state) => state.userDataReduce);
@@ -14,20 +16,27 @@ function Amine() {
     const [totalRating, setTotalRating] = useState(0);
     const [userRating, setUserRating] = useState(0);
 
+    useEffect(() => {
+        if (!isLogin) {
+            history.push("/login");
+        }
 
-    useEffect(async () => {
-        const temp = await fetch(`https://api.aniapi.com/v1/anime?anilist_id=${id}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ANI_APIKEY}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then((res) => res.json())
-        setData(temp.data.documents[0]);
-    }, [])
+    }, [isLogin, history])
 
     useEffect(() => {
+        async function temp() {
+            await fetch(`https://api.aniapi.com/v1/anime?anilist_id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${process.env.REACT_APP_ANI_APIKEY}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            }).then((res) => res.json())
+                .then((res) => setData(res.data.documents[0]))
+        }
+
+        temp();
         if (user !== 0) {
             getRatings();
         }
@@ -47,7 +56,7 @@ function Amine() {
         myRating(rating);
         await axios({
             method: 'post',
-            url: `http://localhost:5000/api/add-ratings`,
+            url: `${process.env.REACT_APP_PROXY}/add-ratings`,
             credentials: 'include',
             withCredentials: true,
             data: {
@@ -60,10 +69,9 @@ function Amine() {
     }
 
     const getRatings = async () => {
-
         await axios({
             method: 'get',
-            url: `http://localhost:5000/api/get-ratings?anime_id=${id}&user_id=${user}`,
+            url: `${process.env.REACT_APP_PROXY}/get-ratings?anime_id=${id}&user_id=${user}`,
             credentials: 'include',
             withCredentials: true,
         })
@@ -83,7 +91,7 @@ function Amine() {
         <section className={"amine-container"}>
             {
                 data && <>
-                    <img className={"banner-img"} src={data.banner_image}/>
+                    <img className={"banner-img"} src={data.banner_image} alt={"banner"}/>
 
                     <div className={"d-flex w-100 flex-wrap justify-content-around align-items-center"}>
                         <div style={{maxWidth: 800}}>
@@ -95,25 +103,25 @@ function Amine() {
                                 <div className={"ms-3"}>
                                     <FontAwesomeIcon className={"m-sm-1"} id={"faStar1"} icon={faStar}
                                                      onClick={() => saveRating(1)}
-                                                     color={"gray"}
+                                                     color={userRating >= 1 ? "yellow" : "gray"}
                                     />
                                     <FontAwesomeIcon className={"m-sm-1"} id={"faStar2"} icon={faStar}
                                                      onClick={() => saveRating(2)}
-                                                     color={"gray"}
+                                                     color={userRating >= 2 ? "yellow" : "gray"}
                                     />
                                     <FontAwesomeIcon className={"m-sm-1"} id={"faStar3"} icon={faStar}
                                                      onClick={() => saveRating(3)}
-                                                     color={"gray"}
+                                                     color={userRating >= 3 ? "yellow" : "gray"}
                                     />
                                     <FontAwesomeIcon className={"m-sm-1"} id={"faStar4"} icon={faStar}
                                                      onClick={() => saveRating(4)}
-                                                     color={"gray"}
+                                                     color={userRating === 4 ? "yellow" : "gray"}
                                     />
                                 </div>
                                 <p className={"my-2 text-secondary h6"}>Genres</p>
                                 <ul className={"d-flex flex-wrap m-0 p-0"}>
                                     {
-                                        data.genres.map((it) => <li>{it} &nbsp;</li>)
+                                        data.genres.map((it, i) => <li key={i}>{it} &nbsp;</li>)
                                     }
                                 </ul>
                                 <h6 className={"my-3 text-primary"}>Total Episode <span>{data.episodes_count}</span>
@@ -126,7 +134,7 @@ function Amine() {
                         </div>
 
                         <div className={"m-2"}>
-                            <img className={"cover-img"} src={data.cover_image}/>
+                            <img className={"cover-img"} src={data.cover_image} alt={"cover"}/>
                         </div>
                     </div>
                 </>

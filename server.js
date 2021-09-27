@@ -15,7 +15,7 @@ app.use([
         credentials: true,
         origin: process.env.ORIGIN
     }),
-    // route.use("/api", require("./Router/router"))
+    route.use("/api", require("./Router/router"))
 ])
 app.use(favicon(__dirname + "/build/favicon.ico"));
 app.use(express.static(__dirname));

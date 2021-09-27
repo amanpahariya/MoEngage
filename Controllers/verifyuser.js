@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const user = (req, res) => {
+const user = (req, res,next) => {
+
     const token = req.cookies.token;
     if (!token) {
         return res.status(401).json({"error": "Unauthorized"})
@@ -8,7 +9,12 @@ const user = (req, res) => {
             if (err) {
                 return res.status(401).json({"error": "token is not verified"});
             } else {
-                return res.status(202).json({"isLogin": true, user});
+                if(req.path!=="/verifyuser"){
+                    next();
+                }else{
+                    return res.status(202).json({"isLogin": true, user});
+                }
+
             }
         });
     }

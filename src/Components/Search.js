@@ -4,9 +4,8 @@ import {useSelector} from "react-redux";
 import {MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBDropdownLink} from 'mdb-react-ui-kit';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 
-function Search(props) {
+function Search() {
     const isLogin = useSelector((state) => state.changeLogin)
     const history = useHistory();
     const [searchBy, setSearchBy] = useState("genres");
@@ -19,22 +18,28 @@ function Search(props) {
             history.push("/login");
         }
 
-    }, [isLogin])
+    }, [isLogin,history])
 
-    const onSubmit = async (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         if (search === "") {
             alert("Enter some input to search")
         }
-        const temp = await fetch(`https://api.aniapi.com/v1/anime?${search}=${searchBy}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${process.env.REACT_APP_ANI_APIKEY}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        }).then((res) => res.json())
-        setData(temp.data.documents);
+
+        async function getData() {
+            await fetch(`https://api.aniapi.com/v1/anime?${searchBy}=${search}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${process.env.REACT_APP_ANI_APIKEY}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            }).then((res) => res.json())
+                .then((res) => setData(res.data.documents))
+        }
+
+        getData();
+
     }
     return (
         <>
@@ -81,7 +86,7 @@ function Search(props) {
 
                         data && data.map((item) => {
                             return (
-                                <div className="card m-2 position-relative" style={{width: "18rem", height: "28rem"}}>
+                                <div key={item.id} className="card m-2 position-relative" style={{width: "18rem", height: "28rem"}}>
                                     <img src={item.banner_image} className="card-img-top" alt={item.titles.en}
                                          style={{width: "100%", height: "10rem", objectFit: "cover"}}/>
                                     <div className="card-body">
@@ -98,13 +103,14 @@ function Search(props) {
                                         {
                                             item.trailer_url ? <a href={item.trailer_url}>Watch trailer</a> : <></>
                                         }
-                                       <div className={"position-absolute bottom-0"}>
-                                           <div className={"mb-1 d-flex small justify-content-between"}>
-                                               <p className={"text-muted pe-1 m-0"}>Season year {item.season_year}</p>
-                                               <p className={"text-muted ps-1 m-0"}>Total Episode {item.episodes_count}</p>
-                                           </div>
-                                           <Link to={`/amine/${item.anilist_id}`}>see more</Link>
-                                       </div>
+                                        <div className={"position-absolute bottom-0"}>
+                                            <div className={"mb-1 d-flex small justify-content-between"}>
+                                                <p className={"text-muted pe-1 m-0"}>Season year {item.season_year}</p>
+                                                <p className={"text-muted ps-1 m-0"}>Total
+                                                    Episode {item.episodes_count}</p>
+                                            </div>
+                                            <Link to={`/amine/${item.anilist_id}`}>see more</Link>
+                                        </div>
                                     </div>
                                 </div>
                             )

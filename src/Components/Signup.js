@@ -19,9 +19,9 @@ function Signup() {
     const history = useHistory();
     useEffect(() => {
         if (isLogin) {
-            history.push("/");
+            history.goBack();
         }
-    }, [isLogin])
+    }, [isLogin,history])
 
     const PasswordLength = (val) => {
         setPassword(val);
